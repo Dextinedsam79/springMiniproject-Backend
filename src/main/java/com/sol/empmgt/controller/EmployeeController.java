@@ -1,10 +1,13 @@
 package com.sol.empmgt.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,6 +60,15 @@ return list;
 		employee.setEmpSalary(employeeDetails.getEmpSalary());
 		repo.save(employee);
 		return ResponseEntity.ok(employee);
+	}
+	@DeleteMapping("/employees/{empId}")
+	public ResponseEntity<Map<String, Boolean>> deleteEmployee(@PathVariable Integer empId)
+	{
+		Employee employee = repo.findById(empId).orElseThrow(()->new EmployeeNotFoundException("Employee Not Found"));
+		repo.delete(employee);
+		Map<String, Boolean> response = new HashMap<String, Boolean>();
+		response.put("Employee record successfully deleted", Boolean.TRUE);
+		return ResponseEntity.ok(response);
 	}
 
 }
